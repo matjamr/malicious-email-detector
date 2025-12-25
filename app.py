@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
 from datetime import datetime
-from email_analyzer import EmailAnalyzer
 from models.models import (
     EmailRequest,
     BatchEmailRequest,
@@ -11,6 +10,12 @@ from models.models import (
     ErrorResponse,
     BatchAnalysisResponse
 )
+from service.context import Context
+from service.phising.email import Email
+from service.phising.sender import Sender
+from service.phising.subject import Subject
+from service.url.MaliciousUrlDetector import MaliciousUrlDetector
+from service.validator import Validator
 
 logging.basicConfig(
     level=logging.INFO,
@@ -25,8 +30,13 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
-email_analyzer = EmailAnalyzer()
 
+flow: list[Validator] = [
+    Email(),
+    Sender(),
+    Subject(),
+    MaliciousUrlDetector()
+]
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -84,18 +94,13 @@ def analyze_email():
             logger.warning(f"Failed to parse EmailRequest: {str(parse_error)}")
             error_response = ErrorResponse(error="Invalid request format", message=str(parse_error))
             return jsonify(error_response.to_dict()), 400
-        
-        # Convert to dict format expected by analyzer
-        email_dict = email_request.to_dict()
-        
-        # Analyze email using the EmailAnalyzer class
-        analysis_dict = email_analyzer.analyze(email_dict)
-        
+
+        context = Context(email_request)
+        for validator in flow:
+            validator.validate(context)
+
         # Convert to typed response model
-        analysis_response = EmailAnalysisResponse.from_dict(analysis_dict)
-        
-        logger.info(f"Analysis completed. Risk score: {analysis_response.overall_score}/100")
-        logger.info("=" * 60)
+        analysis_response = EmailAnalysisResponse.from_dict({})
         
         return jsonify(analysis_response.to_dict()), 200
         
