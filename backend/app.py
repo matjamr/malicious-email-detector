@@ -15,7 +15,9 @@ from service.phising.email import Email
 from service.phising.sender import Sender
 from service.phising.subject import Subject
 from service.url.MaliciousUrlDetector import MaliciousUrlDetector
+from service.malware.malconv import MalConvDetector
 from service.validator import Validator
+from service.response_builder import ResponseBuilder
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,7 +37,8 @@ flow: list[Validator] = [
     Email(),
     Sender(),
     Subject(),
-    MaliciousUrlDetector()
+    MaliciousUrlDetector(),
+    MalConvDetector()
 ]
 
 @app.route('/health', methods=['GET'])
@@ -62,14 +65,27 @@ def analyze_email():
         "reply_to": "reply@example.com",
         "date": "2024-01-01T12:00:00",
         "attachments": [
-            {"filename": "file1.pdf", "size": 1024, "content_type": "application/pdf"},
-            {"filename": "file2.jpg", "size": 2048, "content_type": "image/jpeg"}
+            {
+                "filename": "file1.pdf",
+                "size": 1024,
+                "content_type": "application/pdf",
+                "bytes": "base64_encoded_file_bytes_here"
+            },
+            {
+                "filename": "file2.jpg",
+                "size": 2048,
+                "content_type": "image/jpeg",
+                "bytes": "base64_encoded_file_bytes_here"
+            }
         ],
         "headers": {
             "X-Mailer": "SomeMailer",
             "Message-ID": "<123456@example.com>"
         }
     }
+    
+    Note: Attachment bytes should be base64 encoded strings for JSON transmission.
+    MalConv malware detection will analyze attachments when bytes are provided.
     
     Returns: EmailAnalysisResponse
     """
@@ -99,8 +115,11 @@ def analyze_email():
         for validator in flow:
             validator.validate(context)
 
-        # Convert to typed response model
-        analysis_response = EmailAnalysisResponse.from_dict({})
+        # Build response from context
+        analysis_response = ResponseBuilder.build(context)
+        
+        logger.info(f"Analysis complete. Overall score: {analysis_response.overall_score}")
+        logger.info("=" * 60)
         
         return jsonify(analysis_response.to_dict()), 200
         
@@ -149,10 +168,17 @@ def analyze_email_batch():
         results = []
         for idx, email_request in enumerate(batch_request.emails):
             logger.info(f"Analyzing email {idx + 1}/{len(batch_request.emails)}")
-            email_dict = email_request.to_dict()
-            analysis_dict = email_analyzer.analyze(email_dict)
-            analysis_response = EmailAnalysisResponse.from_dict(analysis_dict)
+            
+            # Create context and run validators
+            context = Context(email_request)
+            for validator in flow:
+                validator.validate(context)
+            
+            # Build response from context
+            analysis_response = ResponseBuilder.build(context)
             results.append(analysis_response)
+            
+            logger.info(f"Email {idx + 1} analysis complete. Score: {analysis_response.overall_score}")
         
         logger.info(f"Batch analysis completed: {len(results)} emails processed")
         logger.info("=" * 60)
