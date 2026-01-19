@@ -1,6 +1,7 @@
 import typing
 import logging
 import re
+import math
 
 from transformers import pipeline
 
@@ -14,7 +15,16 @@ class MaliciousUrlDetector(Validator):
     def __init__(self):
         logger.info("Loading malicious URL detection model")
         self.pipeline = pipeline("text-classification", model="kmack/malicious-url-detection")
-        logger.info("Malicious URL detection model loaded")
+        # Get the tokenizer to check max length
+        self.max_length = 512  # Default max length for most transformer models
+        try:
+            if hasattr(self.pipeline, 'tokenizer') and self.pipeline.tokenizer:
+                self.max_length = getattr(self.pipeline.tokenizer, 'model_max_length', 512)
+                if self.max_length > 100000:  # Some tokenizers return a very large default
+                    self.max_length = 512
+        except Exception as e:
+            logger.warning(f"Could not determine model max length, using default 512: {e}")
+        logger.info(f"Malicious URL detection model loaded (max_length={self.max_length})")
         # URL regex pattern
         self.url_pattern = re.compile(
             r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
@@ -38,12 +48,16 @@ class MaliciousUrlDetector(Validator):
             
             for url in urls:
                 try:
-                    result = self.pipeline(url)
+                    # Truncate URL if it's too long (unlikely but safe)
+                    truncated_url = url[:self.max_length * 3] if len(url) > self.max_length * 3 else url
+                    result = self.pipeline(truncated_url, truncation=True, max_length=self.max_length)
                     logger.info(f"URL '{url}' detection result: {result}")
                     
                     if isinstance(result, list) and len(result) > 0:
                         first_result = result[0]
-                        score = float(first_result.get("score", 0.0))
+                        raw_score = float(first_result.get("score", 0.0))
+                        # Sanitize score to prevent inf/nan values
+                        score = 0.0 if (math.isnan(raw_score) or math.isinf(raw_score)) else max(0.0, min(1.0, raw_score))
                         label = first_result.get("label", "").lower()
                         is_malicious = "malicious" in label or "phishing" in label or score > 0.5
                         

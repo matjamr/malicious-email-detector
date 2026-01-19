@@ -1,0 +1,33 @@
+{
+  "total_samples": 2967,
+  "spam_samples": 2967,
+  "ham_samples": 0,
+  "accuracy": 0.9983147960903269,
+  "precision": 1.0,
+  "recall": 0.9983147960903269,
+  "f1_score": 0.9991566874683758,
+  "specificity": 0,
+  "sensitivity": 0.9983147960903269,
+  "auc": 0.0,
+  "confusion_matrix": {
+    "true_negative": 0,
+    "false_positive": 0,
+    "false_negative": 5,
+    "true_positive": 2962
+  },
+  "score_statistics": {
+    "spam": {
+      "mean": 62.307044152342435,
+      "std": 4.344926074762421,
+      "min": 46.0,
+      "max": 77.0
+    },
+    "ham": {
+      "mean": 0,
+      "std": 0,
+      "min": 0,
+      "max": 0
+    }
+  },
+  "threshold": 50
+}

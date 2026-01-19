@@ -1,6 +1,39 @@
 from dataclasses import dataclass, field, asdict
 from typing import List, Optional, Dict, Any
 from datetime import datetime
+import math
+
+
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
+def sanitize_float(value: Any) -> Optional[float]:
+    """Convert float values to JSON-compliant values (replace inf/nan with None)"""
+    if value is None:
+        return None
+    try:
+        float_val = float(value)
+        if math.isnan(float_val) or math.isinf(float_val):
+            return None
+        return float_val
+    except (TypeError, ValueError):
+        return None
+
+
+def sanitize_dict(data: Dict[str, Any]) -> Dict[str, Any]:
+    """Recursively sanitize a dictionary to remove inf/nan float values"""
+    result = {}
+    for key, value in data.items():
+        if isinstance(value, dict):
+            result[key] = sanitize_dict(value)
+        elif isinstance(value, list):
+            result[key] = [sanitize_dict(item) if isinstance(item, dict) else sanitize_float(item) if isinstance(item, float) else item for item in value]
+        elif isinstance(value, float):
+            result[key] = sanitize_float(value)
+        else:
+            result[key] = value
+    return result
 
 
 # ============================================================================
@@ -155,7 +188,8 @@ class SenderAnalysis:
         """Convert to dictionary with 'from' key"""
         result = asdict(self)
         result["from"] = result.pop("from_")
-        return result
+        # Sanitize float values (inf/nan) to make JSON-compliant
+        return sanitize_dict(result)
 
 
 @dataclass
@@ -231,7 +265,8 @@ class EmailAnalysisResponse:
         }
         if self.error:
             result["error"] = self.error
-        return result
+        # Sanitize float values (inf/nan) to make JSON-compliant
+        return sanitize_dict(result)
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'EmailAnalysisResponse':
@@ -371,9 +406,11 @@ class BatchAnalysisResponse:
     results: List[EmailAnalysisResponse]
     
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        result = {
             "total": self.total,
-            "results": [result.to_dict() for result in self.results]
+            "results": [result_item.to_dict() for result_item in self.results]
         }
+        # Sanitize float values (inf/nan) to make JSON-compliant
+        return sanitize_dict(result)
 
 

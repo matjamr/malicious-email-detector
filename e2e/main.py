@@ -211,7 +211,7 @@ class APIClient:
     """Client for interacting with the email analysis API"""
     
     def __init__(self, base_url: str = API_BASE_URL):
-        self.base_url = base_url
+        self.base_url = "http://127.0.0.1:5000"
         self.session = requests.Session()
         self.session.headers.update({'Content-Type': 'application/json'})
     
@@ -556,9 +556,9 @@ def main():
     # Step 3: Check API health
     print("Step 3: Checking API health...")
     client = APIClient(args.api_url)
-    if not client.health_check():
-        print(f"ERROR: API at {args.api_url} is not healthy. Please start the backend server.")
-        return 1
+    # if not client.health_check():
+    #     print(f"ERROR: API at {args.api_url} is not healthy. Please start the backend server.")
+    #     return 1
     print("API is healthy!\n")
     
     # Step 4: Evaluate

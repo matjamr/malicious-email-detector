@@ -3,6 +3,7 @@ Response builder to aggregate context results into EmailAnalysisResponse
 """
 import re
 import logging
+import math
 from datetime import datetime
 from typing import List, Optional
 from email.utils import parseaddr, parsedate_tz
@@ -99,7 +100,15 @@ class ResponseBuilder:
         
         # Subject analysis
         subject_length = len(subject)
-        subject_uppercase_ratio = sum(1 for c in subject if c.isupper()) / len(subject) if subject else 0.0
+        # Calculate uppercase ratio, ensuring we don't get inf/nan
+        if subject and len(subject) > 0:
+            uppercase_count = sum(1 for c in subject if c.isupper())
+            subject_uppercase_ratio = uppercase_count / len(subject)
+            # Ensure the ratio is valid (not inf/nan)
+            if not (0.0 <= subject_uppercase_ratio <= 1.0):
+                subject_uppercase_ratio = 0.0
+        else:
+            subject_uppercase_ratio = 0.0
         
         # Extract URLs from subject
         url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
@@ -339,23 +348,41 @@ class ResponseBuilder:
         )
     
     @staticmethod
+    def _sanitize_score(score: float) -> float:
+        """Sanitize score value to ensure it's a valid float (not inf/nan)"""
+        if score is None:
+            return 0.0
+        try:
+            score_float = float(score)
+            if math.isnan(score_float) or math.isinf(score_float):
+                return 0.0
+            # Clamp to reasonable range [0, 1]
+            return max(0.0, min(1.0, score_float))
+        except (TypeError, ValueError):
+            return 0.0
+    
+    @staticmethod
     def _calculate_overall_score(context: Context) -> int:
         """Calculate overall risk score (0-100)"""
         score = 0
         
         # Base score from phishing detection (0-30 points)
         if hasattr(context, 'email_body_phishing_score'):
-            score += int(context.email_body_phishing_score * 30)
+            sanitized_score = ResponseBuilder._sanitize_score(context.email_body_phishing_score)
+            score += int(sanitized_score * 30)
         
         if hasattr(context, 'sender_phishing_score'):
-            score += int(context.sender_phishing_score * 20)
+            sanitized_score = ResponseBuilder._sanitize_score(context.sender_phishing_score)
+            score += int(sanitized_score * 20)
         
         if hasattr(context, 'subject_phishing_score'):
-            score += int(context.subject_phishing_score * 15)
+            sanitized_score = ResponseBuilder._sanitize_score(context.subject_phishing_score)
+            score += int(sanitized_score * 15)
         
         # Fraud detection (0-20 points)
         if hasattr(context, 'fraud_score'):
-            score += int(context.fraud_score * 20)
+            sanitized_score = ResponseBuilder._sanitize_score(context.fraud_score)
+            score += int(sanitized_score * 20)
         
         # Malicious URLs (0-15 points)
         if hasattr(context, 'malicious_url_count'):
@@ -366,7 +393,8 @@ class ResponseBuilder:
             for result in context.malware_detection_results:
                 if result.get("is_malicious", False):
                     confidence = result.get("confidence", 0.0)
-                    score += int(confidence * 20)
+                    sanitized_confidence = ResponseBuilder._sanitize_score(confidence)
+                    score += int(sanitized_confidence * 20)
                     break  # Only count first malicious attachment
         
         # Cap at 100
