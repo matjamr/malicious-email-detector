@@ -20,36 +20,33 @@
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="ms-font-m ms-welcome ms-Fabric">
-    <header class="ms-welcome__header ms-bgColor-neutralLighter">
-        <img width="90" height="90" src="../../assets/logo-filled.png" alt="Contoso" title="Contoso" />
-        <h1 class="ms-font-su">Welcome</h1>
-    </header>
+<body class="ms-font-m ms-welcome ms-Fabric" style="background-color: #ffffff !important; background: #ffffff !important;">
     <section id="sideload-msg" class="ms-welcome__main">
         <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
     </section>
-    <main id="app-body" class="ms-welcome__main" style="display: none;">
-        <h2 class="ms-font-xl"> Discover what Office Add-ins can do for you today! </h2>
-        <ul class="ms-List ms-welcome__features">
-            <li class="ms-ListItem">
-                <i class="ms-Icon ms-Icon--Ribbon ms-font-xl"></i>
-                <span class="ms-font-m">Achieve more with Office integration</span>
-            </li>
-            <li class="ms-ListItem">
-                <i class="ms-Icon ms-Icon--Unlock ms-font-xl"></i>
-                <span class="ms-font-m">Unlock features and functionality</span>
-            </li>
-            <li class="ms-ListItem">
-                <i class="ms-Icon ms-Icon--Design ms-font-xl"></i>
-                <span class="ms-font-m">Create and visualize like a pro</span>
-            </li>
-        </ul>
-        <p class="ms-font-l">Kliknij <b>Analizuj</b>, aby sprawdzić email.</p>
-        <div role="button" id="run" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
-            <span class="ms-Button-label">Analizuj</span>
+    <main id="app-body" class="ms-welcome__main" style="display: none; background-color: #ffffff !important; background: #ffffff !important;">
+        <div style="width: 100%; max-width: 600px;">
+            <h2 class="ms-font-xl" style="text-align: center; margin-bottom: 32px; font-weight: 300; color: #323130;">Analiza Bezpieczeństwa Emaila</h2>
+            <button id="run" class="analyze-button" style="width: 100%; margin-bottom: 20px;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                    <path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM10 16.5C6.41 16.5 3.5 13.59 3.5 10C3.5 6.41 6.41 3.5 10 3.5C13.59 3.5 16.5 6.41 16.5 10C16.5 13.59 13.59 16.5 10 16.5Z" fill="currentColor"/>
+                    <path d="M9.25 6.25V10.25L12.5 12.25L13.25 11L10.75 9.5V6.25H9.25Z" fill="currentColor"/>
+                </svg>
+                <span>Analizuj Email</span>
+            </button>
+            <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;">
+                <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0078d7; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <p style="margin-top: 10px; color: #666;">Analizowanie emaila...</p>
+            </div>
+            <div id="analysis-result"></div>
         </div>
-        <div id="analysis-result" style="margin-top: 20px;"></div>
     </main>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 
 </html>
