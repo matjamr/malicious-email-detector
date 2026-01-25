@@ -1,10 +1,3 @@
-/*
- * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
- * See LICENSE in the project root for license information.
- */
-
-/* global document, Office */
-
 Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
     document.getElementById("sideload-msg").style.display = "none";
@@ -36,7 +29,6 @@ export async function run() {
   const item = Office.context.mailbox.item;
   
   try {
-    // Collect email data
     const emailData: any = {
       subject: item.subject || "",
       body: "",
@@ -50,7 +42,6 @@ export async function run() {
       headers: {}
     };
 
-    // Get body content
     await new Promise<void>((resolve) => {
       if (item.body) {
         item.body.getAsync(Office.CoercionType.Text, (result) => {
@@ -72,7 +63,7 @@ export async function run() {
   }
 }
 
-function sendEmailToServer(emailData: any, item: Office.ItemRead) {
+function sendEmailToServer(emailData: any, item: Office.ItemRead ) {
   try {
     // Get email addresses
     if (item.from && item.from.emailAddress) {
@@ -150,7 +141,6 @@ async function performRequest(emailData: any) {
     const result = await response.json();
     console.log("Server response:", result);
     
-    // Display analysis result
     displayAnalysisResult(result);
     
   } catch (error: any) {
@@ -177,27 +167,26 @@ function displayAnalysisResult(result: any) {
   const security = result.security_analysis || {};
   const metadata = result.metadata || {};
 
-  // Determine risk level and colors
   let riskLevel = "low";
-  let riskColor = "#16a34a"; // green
+  let riskColor = "#16a34a";
   let riskBgColor = "#f0fdf4";
   let riskBorderColor = "#16a34a";
-  let riskText = "Bezpieczny";
-  let riskMessage = "Email wygląda na bezpieczny.";
+  let riskText = "Względnie bezpieczny";
+  let riskMessage = "Email wygląda na względnie bezpieczny.";
 
-  if (overallScore >= 70) {
+  if (overallScore >= 75) {
     riskLevel = "high";
-    riskColor = "#dc2626"; // red
+    riskColor = "#dc2626"; 
     riskBgColor = "#fef2f2";
     riskBorderColor = "#dc2626";
     riskText = "Wysokie Ryzyko";
     riskMessage = "Nie otwieraj załączników i nie klikaj w linki!";
-  } else if (overallScore >= 40) {
+  } else if (overallScore >= 60) {
     riskLevel = "medium";
-    riskColor = "#f59e0b"; // orange
+    riskColor = "#f59e0b"; 
     riskBgColor = "#fff7ed";
     riskBorderColor = "#f59e0b";
-    riskText = "Średnie Ryzyko";
+    riskText = "Podejrzany";
     riskMessage = "Sprawdź email dokładnie przed otwarciem.";
   }
 
