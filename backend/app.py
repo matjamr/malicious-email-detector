@@ -16,9 +16,18 @@ from service.phising.email import Email
 from service.phising.sender import Sender
 from service.phising.subject import Subject
 from service.url.MaliciousUrlDetector import MaliciousUrlDetector
-from service.malware.malconv import MalConvDetector
 from service.validator import Validator
 from service.response_builder import ResponseBuilder
+
+# Try to import MalConvDetector, but make it optional
+try:
+    from service.malware.malconv import MalConvDetector
+    MALCONV_AVAILABLE = True
+except ImportError as e:
+    logger_temp = logging.getLogger(__name__)
+    logger_temp.warning(f"MalConvDetector not available: {e}. Malware detection will be skipped.")
+    MALCONV_AVAILABLE = False
+    MalConvDetector = None
 
 logging.basicConfig(
     level=logging.INFO,
@@ -42,13 +51,20 @@ def disable_host_check():
     pass
 
 
+# Build flow with available validators
 flow: list[Validator] = [
     Email(),
     Sender(),
     Subject(),
     MaliciousUrlDetector(),
-    MalConvDetector()
 ]
+
+# Add MalConvDetector only if available
+if MALCONV_AVAILABLE and MalConvDetector:
+    flow.append(MalConvDetector())
+    logger.info("MalConvDetector added to validation flow")
+else:
+    logger.warning("MalConvDetector not available - malware detection disabled")
 
 @app.route('/health', methods=['GET'])
 def health_check():

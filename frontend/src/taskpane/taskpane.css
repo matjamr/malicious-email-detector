@@ -9,6 +9,24 @@
      height: 100%;
      margin: 0;
      padding: 0;
+     background-color: #ffffff !important;
+     background: #ffffff !important;
+ }
+ 
+ /* Wymuszenie białego tła dla wszystkich elementów */
+ * {
+     background-color: inherit;
+ }
+ 
+ body,
+ body.ms-Fabric,
+ body.ms-welcome,
+ #app-body,
+ .ms-welcome__main,
+ #sideload-msg {
+     background-color: #ffffff !important;
+     background: #ffffff !important;
+     color: #323130 !important;
  }
  
  ul {
@@ -77,4 +95,88 @@
 
 b {
     font-weight: bold;
+}
+
+/* Wymuszenie białego tła dla kontenerów */
+#app-body > div,
+.ms-welcome__main > div {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+}
+
+/* Analysis Result Styles */
+#analysis-result {
+    width: 100%;
+    max-width: 600px;
+    background-color: transparent !important;
+}
+
+#analysis-result h2, #analysis-result h3 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#analysis-result .card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+#analysis-result .card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#loading-indicator {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#loading-indicator p {
+    margin-top: 16px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Analyze Button - Minimalist Design */
+.analyze-button {
+    background: linear-gradient(135deg, #0078d7 0%, #106ebe 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 120, 215, 0.2);
+    outline: none;
+}
+
+.analyze-button:hover {
+    background: linear-gradient(135deg, #106ebe 0%, #005a9e 100%);
+    box-shadow: 0 4px 12px rgba(0, 120, 215, 0.3);
+    transform: translateY(-1px);
+}
+
+.analyze-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 120, 215, 0.2);
+}
+
+.analyze-button:focus {
+    box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2);
+}
+
+.analyze-button svg {
+    transition: transform 0.2s ease;
+}
+
+.analyze-button:hover svg {
+    transform: rotate(15deg);
 }

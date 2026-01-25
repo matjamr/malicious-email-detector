@@ -1,0 +1,116 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
+  <diagram name="Struktura Modułów Backendu" id="moduly">
+    <mxGraphModel dx="2194" dy="1294" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="app" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=16" value="Flask App (app.py)" vertex="1">
+          <mxGeometry height="70" width="250" x="490" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="endpoints" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=14" value="Endpoints API" vertex="1">
+          <mxGeometry height="50" width="250" x="490" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="analyze" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="/analyze&#xa;POST" vertex="1">
+          <mxGeometry height="50" width="70" x="580" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="context_class" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=14" value="Context" vertex="1">
+          <mxGeometry height="60" width="250" x="490" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="context_fields" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10" value="email_request: EmailRequest&#xa;email_body_phishing_score: float&#xa;sender_phishing_score: float&#xa;subject_phishing_score: float&#xa;malicious_urls: List[str]&#xa;attachment_analysis: dict&#xa;..." vertex="1">
+          <mxGeometry height="140" width="210" x="510" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-1" edge="1" parent="1" source="validators_title" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="595" />
+            </Array>
+            <mxPoint x="330" y="1310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="validators_title" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=14" value="Validators (Pipeline)" vertex="1">
+          <mxGeometry height="50" width="250" x="40" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-2" edge="1" parent="1" source="email_val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;startArrow=classic;startFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="email_val" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left" value="Email Validator&#xa;&#xa;Model: kamikaze20/&#xa;phishing-email-detection_body&#xa;&#xa;Transformers Pipeline&#xa;Text Classification" vertex="1">
+          <mxGeometry height="120" width="200" x="60" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-3" edge="1" parent="1" source="sender_val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=none;endFill=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sender_val" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left" value="Sender Validator&#xa;&#xa;Model: kamikaze20/&#xa;phishing-email-detection_sender&#xa;&#xa;Transformers Pipeline&#xa;Text Classification" vertex="1">
+          <mxGeometry height="120" width="200" x="60" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-5" edge="1" parent="1" source="subject_val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;startArrow=classic;startFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="1120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="subject_val" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left" value="Subject Validator&#xa;&#xa;Model: kamikaze20/&#xa;phishing-email-detection_subject&#xa;&#xa;Transformers Pipeline&#xa;Text Classification" vertex="1">
+          <mxGeometry height="120" width="200" x="60" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-4" edge="1" parent="1" source="url_val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;startArrow=classic;startFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="url_val" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left" value="URL Detector&#xa;&#xa;Heurystyczna analiza&#xa;wzorów URL&#xa;&#xa;• Wykrywanie skróconych linków&#xa;• Analiza domen&#xa;• Podejrzane wzorce" vertex="1">
+          <mxGeometry height="120" width="200" x="60" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-6" edge="1" parent="1" source="malconv_val" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;startArrow=classic;startFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="1260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="malconv_val" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left" value="MalConv Detector&#xa;&#xa;(Opcjonalny)&#xa;&#xa;Analiza załączników&#xa;pod kątem malware&#xa;&#xa;Wymaga: llama-cpp-python" vertex="1">
+          <mxGeometry height="120" width="200" x="60" y="1200" as="geometry" />
+        </mxCell>
+        <mxCell id="TLTptn9yydneL50z8npu-7" edge="1" parent="1" source="response_builder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;startArrow=classic;startFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="925" />
+              <mxPoint x="410" y="1310" />
+            </Array>
+            <mxPoint x="330" y="1310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="response_builder" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=14" value="ResponseBuilder" vertex="1">
+          <mxGeometry height="50" width="250" x="490" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="response_methods" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10" value="build_response(context: Context)&#xa;calculate_overall_score()&#xa;aggregate_results()&#xa;build_content_analysis()&#xa;build_sender_analysis()&#xa;build_attachment_analysis()" vertex="1">
+          <mxGeometry height="120" width="210" x="510" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="models" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14" value="Models (Pydantic)" vertex="1">
+          <mxGeometry height="50" width="250" x="500" y="1050" as="geometry" />
+        </mxCell>
+        <mxCell id="model_list" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10" value="EmailRequest&#xa;EmailAnalysisResponse&#xa;BatchEmailRequest&#xa;BatchAnalysisResponse&#xa;ErrorResponse&#xa;HealthCheckResponse" vertex="1">
+          <mxGeometry height="120" width="210" x="510" y="1130" as="geometry" />
+        </mxCell>
+        <mxCell id="conn1" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="endpoints" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn2" edge="1" parent="1" source="endpoints" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="analyze" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn3" edge="1" parent="1" source="analyze" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="context_class" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn4" edge="1" parent="1" source="context_class" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeWidth=2;fontStyle=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="validators_title" value="validate(context)">
+          <mxGeometry relative="1" x="-0.4408" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="409.97" y="270.02857142857135" as="sourcePoint" />
+            <mxPoint x="169.99857142857135" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn6" edge="1" parent="1" source="response_builder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;strokeWidth=2;fontStyle=1" target="models" value="EmailAnalysisResponse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

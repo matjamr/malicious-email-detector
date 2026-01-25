@@ -14,12 +14,12 @@
         "termsOfUseUrl": "https://www.contoso.com/servicesagreement"
     },
     "name": {
-        "short": "tescikwzirni",
-        "full": "Contoso Task Pane Add-in"
+        "short": "Projekt WZiRNI - MJ & LL",
+        "full": "Projekt WZiRNI - MJ & LL"
     },
     "description": {
-        "short": "A template to get started.",
-        "full": "This is the template to get started."
+        "short": "Analiza bezpieczeństwa emaili - wykrywanie phishing i złośliwego oprogramowania",
+        "full": "Dodatek do Outlook analizujący bezpieczeństwo emaili. Wykrywa podejrzane treści, phishing, złośliwe linki i załączniki. Automatycznie analizuje aktualnie otwarty email i wyświetla szczegółowy raport bezpieczeństwa."
     },
     "icons": {
         "outline": "assets/outline.png",
@@ -76,21 +76,6 @@
                             "view": "dashboard"
                         }
                     ]
-                },
-                {
-                    "id": "CommandsRuntime",
-                    "type": "general",
-                    "code": {
-                        "page": "https://localhost:3000/commands.html",
-                        "script": "https://localhost:3000/commands.js"
-                    },
-                    "lifetime": "short",
-                    "actions": [
-                        {
-                            "id": "action",
-                            "type": "executeFunction"
-                        }
-                    ]
                 }
             ],
             "ribbons": [
@@ -104,7 +89,7 @@
                             "groups": [
                                 {
                                     "id": "msgReadGroup",
-                                    "label": "Contoso Add-in",
+                                    "label": "Analiza Bezpieczeństwa",
                                     "icons": [
                                         {
                                             "size": 16,
@@ -123,7 +108,7 @@
                                         {
                                             "id": "msgReadOpenPaneButton",
                                             "type": "button",
-                                            "label": "Show Task Pane",
+                                            "label": "Pokaż panel",
                                             "icons": [
                                                 {
                                                     "size": 16,
@@ -139,34 +124,10 @@
                                                 }
                                             ],
                                             "supertip": {
-                                                "title": "Show Task Pane",
-                                                "description": "Opens a pane displaying all available properties."
+                                                "title": "Analizuj Email",
+                                                "description": "Otwiera panel i automatycznie uruchamia analizę bezpieczeństwa aktualnie otwartego emaila"
                                             },
                                             "actionId": "TaskPaneRuntimeShow"
-                                        },
-                                        {
-                                            "id": "ActionButton",
-                                            "type": "button",
-                                            "label": "Perform an action",
-                                            "icons": [
-                                                {
-                                                    "size": 16,
-                                                    "url": "https://localhost:3000/assets/icon-16.png"
-                                                },
-                                                {
-                                                    "size": 32,
-                                                    "url": "https://localhost:3000/assets/icon-32.png"
-                                                },
-                                                {
-                                                    "size": 80,
-                                                    "url": "https://localhost:3000/assets/icon-80.png"
-                                                }
-                                            ],
-                                            "supertip": {
-                                                "title": "Perform an action",
-                                                "description": "Perform an action when clicked."
-                                            },
-                                            "actionId": "action"
                                         }
                                     ]
                                 }
